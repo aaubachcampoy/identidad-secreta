@@ -1,5 +1,5 @@
-import { store, mode } from './store.js';
-import { COLORS, PANEL, POOL, PICTOS } from './data.js';
+import { store, mode } from './store.js?v=5';
+import { COLORS, PANEL, POOL, PICTOS } from './data.js?v=5';
 
 const $app = document.getElementById('app');
 const S = mode === 'local' ? sessionStorage : localStorage;
@@ -209,7 +209,7 @@ async function startTV(code) {
 function startPhone(prefill) {
   document.body.dataset.theme = localStorage.getItem('is_theme') || 'dark';
   let code = S.getItem('is_code') || '', room = null, unsub = null, err = '', loaded = false;
-  const ui = { key: '', sel: null, face: null, hide: false, draft: null, votes: {} };
+  const ui = { key: '', sel: null, face: null, hide: false, draft: null, votes: {}, board: false };
   const R = () => 'rooms/' + code;
   const me = () => room?.players?.[pid];
 
@@ -245,6 +245,7 @@ function startPhone(prefill) {
     leave: async () => { if (room?.phase === 'lobby') await store.set(`${R()}/players/${pid}`, null); leave(); },
     theme: () => { const t = document.body.dataset.theme === 'dark' ? 'light' : 'dark'; document.body.dataset.theme = t; localStorage.setItem('is_theme', t); render(); },
     hide: () => { ui.hide = !ui.hide; render(); },
+    board: () => { ui.board = !ui.board; render(); },
     pick: d => { const k = +d.k; ui.sel = ui.sel === k ? null : k; ui.face = null; render(); },
     face: d => { ui.face = +d.f; render(); },
     zone: d => {
@@ -272,6 +273,7 @@ function startPhone(prefill) {
     const top = `<div class="ph-top" style="background:${c.c}"><span class="tag">${esc(m.name)}</span><div style="flex:1"></div>
       <span class="tag sm">${['clues', 'vote', 'reveal'].includes(ph) ? `RONDA ${room.round}/4` : ph === 'final' ? 'FINAL' : 'SALA ' + code}</span>
       <button class="icon-btn" data-a="theme" title="Cambiar tema">${icon(document.body.dataset.theme === 'dark' ? 'Sun' : 'Moon')}</button>
+      ${board.length && ['clues', 'vote', 'reveal'].includes(ph) ? `<button class="icon-btn" data-a="board" title="Ver personajes">${icon('LayoutGrid')}</button>` : ''}
       ${ph === 'lobby' ? `<button class="icon-btn" data-a="leave" title="Salir">${icon('LogOut')}</button>` : ''}</div>`;
     const secret = sec ? `<button class="secret" data-a="hide" style="border-color:${PANEL[sec - 1].c}"><span class="num">${ui.hide ? '?' : sec}</span><span><small>TU PERSONAJE · TOCA PARA ${ui.hide ? 'VER' : 'OCULTAR'}</small><b>${ui.hide ? 'Oculto' : esc(board[sec - 1])}</b></span></button>` : '';
     let body = '';
@@ -315,7 +317,9 @@ function startPhone(prefill) {
       body = `<div class="center"><div class="lbl">POSICIÓN FINAL</div><div class="big">${rk.findIndex(p => p.id === pid) + 1}º</div><div style="font-weight:600">${m.score || 0} puntos</div></div>`;
     }
 
-    paint(`<div class="phone">${top}<div class="ph-body">${body}</div></div>`);
+    const sheet = ui.board && board.length && ['clues', 'vote', 'reveal'].includes(ph) ? `<div class="sheet-bg" data-a="board"></div><div class="sheet"><div class="sheet-h"><span class="lbl">PERSONAJES · RONDA ${room.round}</span><button class="icon-btn" data-a="board" title="Cerrar">${icon('X')}</button></div>
+      <div class="mboard">${board.map((n, j) => `<div class="mcol${j + 1 === sec && !ui.hide ? ' me' : ''}"><div class="mstrip" style="background:linear-gradient(180deg,${PANEL[j].l} 0%,${PANEL[j].c} 72%)"><i style="top:22%"></i><i style="top:44%"></i><i style="top:66%"></i><span class="mnum">${j + 1}</span></div><div class="mname">${esc(n)}</div></div>`).join('')}</div></div>` : '';
+    paint(`<div class="phone">${top}<div class="ph-body">${body}</div>${sheet}</div>`);
   }
 
   function joinView() {

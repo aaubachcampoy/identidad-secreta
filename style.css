@@ -118,3 +118,18 @@ button, input, textarea { font-family:var(--f); }
 .rank { display:flex; align-items:center; gap:12px; background:#000; border-radius:8px; padding:10px 14px; }
 .rank .pos { width:2em; font-family:var(--fd); font-size:1.4em; }
 .note { background:#2A1A00; border:1px solid #6B4A00; color:#FFD98A; border-radius:8px; padding:10px 12px; font-size:.9em; line-height:1.4; }
+
+.sheet-bg { position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:20; }
+.sheet { position:fixed; left:0; right:0; bottom:0; z-index:21; background:var(--bg); border-top:3px solid var(--red); border-radius:14px 14px 0 0; padding:12px 14px 20px; max-height:80vh; overflow:auto; display:flex; flex-direction:column; gap:10px; }
+.sheet-h { display:flex; align-items:center; justify-content:space-between; }
+.blist { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.bitem { display:flex; align-items:center; gap:10px; min-height:52px; padding:6px 10px 6px 6px; border-radius:10px; background:var(--card); border:2px solid var(--line); font-weight:700; font-size:15px; line-height:1.15; }
+.bitem.me { border-color:var(--fg); }
+.bnum { flex:none; width:38px; height:38px; border-radius:8px; display:grid; place-items:center; color:#000; font-weight:900; font-size:18px; }
+.mboard { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; background:#000; padding:6px; border-radius:6px; }
+.mcol { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.mstrip { height:min(28vh,170px); position:relative; border-radius:4px; box-shadow:inset 0 0 0 3px rgba(0,0,0,.15); }
+.mcol.me .mstrip { box-shadow:inset 0 0 0 3px #fff; }
+.mstrip i { position:absolute; left:0; right:0; height:1px; background:rgba(255,255,255,.45); }
+.mnum { position:absolute; left:50%; bottom:8px; transform:translateX(-50%); width:32px; height:32px; border-radius:50%; background:var(--red); border:2px solid #fff; color:#fff; display:grid; place-items:center; font-family:var(--fd); font-size:16px; }
+.mname { min-height:44px; background:#1A1A1A; color:#fff; border-radius:4px; display:flex; align-items:center; justify-content:center; padding:2px 1px; text-align:center; font-size:11px; font-weight:700; line-height:1.1; hyphens:auto; -webkit-hyphens:auto; }

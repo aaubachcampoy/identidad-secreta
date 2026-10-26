@@ -1,4 +1,4 @@
-import { FIREBASE_CONFIG } from './firebase-config.js';
+import { FIREBASE_CONFIG } from './firebase-config.js?v=5';
 
 const hasFirebase = !!(FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.databaseURL);
 export const mode = hasFirebase ? 'firebase' : 'local';
